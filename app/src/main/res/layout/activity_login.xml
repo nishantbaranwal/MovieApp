@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/gradient"
+    tools:context=".LoginActivity">
+
+    <ImageView
+        android:layout_width="120dp"
+        android:layout_height="150dp"
+        android:src="@drawable/movieapplogo"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="50dp"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/imageView"/>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:id="@+id/et_email"
+        android:layout_height="40dp"
+        android:background="#11000000"
+        android:textColorHint="#BDBBBB"
+        android:ems="10"
+        android:textSize="16sp"
+        android:inputType="textEmailAddress"
+        android:layout_margin="4dp"
+        android:hint="Email Id"
+        android:textColor="#ffffff"
+        android:layout_centerInParent="true"/>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:id="@+id/et_password"
+        android:background="#11000000"
+        android:layout_below="@id/et_email"
+        android:ems="10"
+        android:textColor="#ffffff"
+        android:textColorHint="#BDBBBB"
+        android:textSize="16sp"
+        android:inputType="textPassword"
+        android:layout_margin="4dp"
+        android:hint="Password"
+        android:layout_centerInParent="true"/>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_centerInParent="true"
+        android:text="Login"
+        android:id="@+id/btn_login"
+        android:layout_below="@id/et_password"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="or"
+        android:textSize="40sp"
+        android:layout_marginTop="30dp"
+        android:layout_centerInParent="true"
+        android:id="@+id/or"
+        android:textColor="#ffffff"
+        android:fontFamily="@font/dancing_script_bold"
+        android:layout_below="@id/btn_login"/>
+
+    <com.google.android.gms.common.SignInButton
+        android:id="@+id/sign_in_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/or"
+        android:layout_marginTop="30dp"
+        android:layout_centerInParent="true"
+        android:layout_marginBottom="50dp"
+    />
+    </RelativeLayout>
