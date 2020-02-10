@@ -17,6 +17,18 @@
         android:layout_centerHorizontal="true"
         android:id="@+id/imageView"/>
 
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/imageView"
+        android:layout_centerInParent="true"
+        android:textSize="20sp"
+        android:textColor="#ffffff"
+        android:textStyle="italic|bold"
+        android:fontFamily="@font/dancing_script_bold"
+        android:text="The Movie App" />
+
     <EditText
         android:layout_width="match_parent"
         android:id="@+id/et_email"
