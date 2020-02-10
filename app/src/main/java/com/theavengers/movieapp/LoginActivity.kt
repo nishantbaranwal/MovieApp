@@ -43,7 +43,6 @@ class LoginActivity : AppCompatActivity(),View.OnClickListener {
     override fun onClick(v: View?) {
         when(v?.id){
             R.id.sign_in_button -> signIn()
-
         }
     }
     private fun signIn() {
