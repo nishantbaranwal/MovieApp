@@ -7,7 +7,7 @@ import androidx.fragment.app.FragmentPagerAdapter
 
 class ViewPagerAdapter(context: Context, supportFragmentManager: FragmentManager):FragmentPagerAdapter(supportFragmentManager) {
     var ctx:Context = context
-    override fun getItem(position: Int): Fragment? {
+    override fun getItem(position: Int): Fragment {
         var fragment:Fragment = Fragment()
         if (position == 0)
             fragment = TopMoviesFragment(ctx)
@@ -20,4 +20,10 @@ class ViewPagerAdapter(context: Context, supportFragmentManager: FragmentManager
         return 2
     }
 
+    override fun getPageTitle(position: Int): CharSequence? {
+        if(position == 0)
+            return "Top Movies"
+        else
+            return "Top Movies"
+    }
 }

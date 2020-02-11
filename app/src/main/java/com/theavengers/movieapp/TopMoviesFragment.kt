@@ -18,7 +18,6 @@ import io.reactivex.SingleObserver
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
-import kotlinx.android.synthetic.main.fragment_top_movies.*
 import retrofit2.Response
 
 
@@ -73,17 +72,14 @@ class TopMoviesFragment(context: Context) : Fragment() {
     }
 
     fun updateUI(resultList: ResultList){
-        for (result  in resultList.resultList!!){
             val recyclerView: RecyclerView? = fragmentView?.findViewById(R.id.recyclerView)
             val layoutManager = LinearLayoutManager(ctx)
 
             recyclerView?.setLayoutManager(layoutManager)
             recyclerView?.setHasFixedSize(true)
 
-            val adapter = TopMoviesAdapter(result)
+            val adapter = TopMoviesAdapter(resultList.resultList,ctx)
             recyclerView?.adapter = adapter
-
-        }
     }
 
     override fun onDestroy() {

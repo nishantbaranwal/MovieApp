@@ -28,6 +28,7 @@ class LoginActivity : AppCompatActivity(),View.OnClickListener {
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
             .requestEmail()
             .build()
+
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
         val signInButton :SignInButton = findViewById(R.id.sign_in_button);
         signInButton.setSize(SignInButton.SIZE_STANDARD);
@@ -63,7 +64,7 @@ class LoginActivity : AppCompatActivity(),View.OnClickListener {
 
     private fun handleSignInResult(task: Task<GoogleSignInAccount>) {
         try {
-            val account: GoogleSignInAccount? = task.getResult(ApiException:: class.java)
+//            val account: GoogleSignInAccount? = task.getResult(ApiException:: class.java)
             startActivity(Intent(applicationContext,ViewMovieActivity::class.java))
         }
         catch (e:ApiException){
