@@ -16,11 +16,13 @@ import com.google.android.gms.tasks.Task
 
 
 class LoginActivity : AppCompatActivity(),View.OnClickListener {
+
     var mGoogleSignInClient:GoogleSignInClient ?= null
     var RC_SIGN_IN:Int = 101
     var TAG = "LoginActivity"
 
     override fun onCreate(savedInstanceState: Bundle?) {
+
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -30,13 +32,14 @@ class LoginActivity : AppCompatActivity(),View.OnClickListener {
         val signInButton :SignInButton = findViewById(R.id.sign_in_button);
         signInButton.setSize(SignInButton.SIZE_STANDARD);
         signInButton.setOnClickListener(this)
+
     }
 
     override fun onStart() {
         super.onStart()
         val account = GoogleSignIn.getLastSignedInAccount(this)
         if(account!=null){
-            Toast.makeText(applicationContext,"Use this block",Toast.LENGTH_LONG).show()
+            startActivity(Intent(applicationContext,ViewMovieActivity::class.java))
         }
     }
 
@@ -61,7 +64,7 @@ class LoginActivity : AppCompatActivity(),View.OnClickListener {
     private fun handleSignInResult(task: Task<GoogleSignInAccount>) {
         try {
             val account: GoogleSignInAccount? = task.getResult(ApiException:: class.java)
-            Toast.makeText(applicationContext,"Logged In",Toast.LENGTH_LONG).show()
+            startActivity(Intent(applicationContext,ViewMovieActivity::class.java))
         }
         catch (e:ApiException){
             Log.w(TAG, "signInResult:failed code=" + e.getStatusCode());
