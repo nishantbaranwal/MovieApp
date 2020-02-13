@@ -1,14 +1,15 @@
 package com.theavengers.movieapp
 
 import android.app.ProgressDialog
-import androidx.appcompat.app.AppCompatActivity
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
-import androidx.appcompat.widget.SearchView
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.viewpager.widget.ViewPager
-import com.google.android.material.tabs.TabLayout
 import com.theavengers.movieapp.model.ResultList
 import com.theavengers.movieapp.model.TheMovieDbApiInterface
 import com.theavengers.movieapp.model.getRetrofit
@@ -19,44 +20,25 @@ import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import retrofit2.Response
 
-class ViewMovieActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
-
-    var resultList: ResultList?= null
+class TopKidMoviesFragment(context: Context) : Fragment() {
+    var ctx:Context = context
     var disposable: Disposable?= null
-    var adapter : TopMoviesAdapter ?= null
-    override fun onQueryTextSubmit(query: String?): Boolean {
-        for(results : ResultList.Results in resultList?.resultList!!) {
-            if (results.original_title.equals(query)) {
-                resultList?.let { updateUI(it) }
-            }
-        }
-        return false
-    }
+    var resultList: ResultList?= null
+    var fragmentView: View?= null
 
-    override fun onQueryTextChange(newText: String?): Boolean {
-        newText?.let { adapter?.filter(it) }
-        resultList?.let { updateUI(it) }
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        fragmentView = inflater.inflate(R.layout.fragment_top_movies,container,false)
 
-        return false
-    }
-
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_view_movie)
-
-        val viewPager:ViewPager = findViewById(R.id.viewPager)
-        val tabLayout:TabLayout = findViewById(R.id.tabLayout)
-        val viewPagerAdapter = ViewPagerAdapter(this, supportFragmentManager)
-        val searchView:SearchView = findViewById(R.id.search_view)
         val theMovieDbApiInterface : TheMovieDbApiInterface? = getRetrofit()?.
             create(TheMovieDbApiInterface::class.java)
         val responseSingleResultList : Single<Response<ResultList>>? = theMovieDbApiInterface?.
             getPopularKidsMovies()
-        val progressDialog = ProgressDialog(this)
 
-        searchView.setOnQueryTextListener(this)
-
+        val progressDialog = ProgressDialog(ctx)
 
         progressDialog.max = 100
         progressDialog.setMessage("Its loading....")
@@ -71,7 +53,7 @@ class ViewMovieActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
             override fun onSuccess(t: Response<ResultList>) {
                 Log.d("IsConnectionSuccessfull", (t.code().toString()));
                 resultList = t.body();
-//                resultList?.let { updateUI(it) };
+                resultList?.let { updateUI(it) };
                 progressDialog.dismiss()
             }
 
@@ -85,22 +67,18 @@ class ViewMovieActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
             }
 
         })
-
-        viewPager.setAdapter(viewPagerAdapter)
-        tabLayout.setupWithViewPager(viewPager)
-
+        return fragmentView
     }
 
-    private fun updateUI(resultList: ResultList) {
-        val recyclerView: RecyclerView? = findViewById(R.id.recyclerView)
-        val layoutManager = LinearLayoutManager(this)
+    fun updateUI(resultList: ResultList){
+        val recyclerView: RecyclerView? = fragmentView?.findViewById(R.id.recyclerView)
+        val layoutManager = LinearLayoutManager(ctx)
 
         recyclerView?.setLayoutManager(layoutManager)
         recyclerView?.setHasFixedSize(true)
 
-        adapter = TopMoviesAdapter(resultList.resultList,this)
+        val adapter = TopMoviesAdapter(resultList.resultList,ctx)
         recyclerView?.adapter = adapter
-
     }
 
     override fun onDestroy() {

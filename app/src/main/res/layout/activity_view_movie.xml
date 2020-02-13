@@ -7,13 +7,21 @@
     tools:context=".ViewMovieActivity"
     android:orientation="vertical">
 
+    <androidx.appcompat.widget.SearchView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/search_view"/>
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/recyclerView"/>
+
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/gradient"
         app:tabMode="fixed"/>
-
 
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/viewPager"

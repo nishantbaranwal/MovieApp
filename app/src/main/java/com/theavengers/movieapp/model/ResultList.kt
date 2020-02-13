@@ -31,10 +31,10 @@ class ResultList {
         val backdrop_path:String = ""
 
         @SerializedName("original_language")
-        val original_language:String = ""
+        public val original_language:String = ""
 
         @SerializedName("original_title")
-        val original_title:String = ""
+        public val original_title:String = ""
 
         @SerializedName("vote_average")
         val vote_average:Double = 0.0
