@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ViewMovieActivity"
+    tools:context="com.theavengers.movieapp2.ViewMovieActivity"
     android:orientation="vertical">
 
     <androidx.appcompat.widget.SearchView

@@ -1,4 +1,4 @@
-package com.theavengers.movieapp.model
+package com.theavengers.movieapp2.model
 
 import io.reactivex.Single
 import retrofit2.Response

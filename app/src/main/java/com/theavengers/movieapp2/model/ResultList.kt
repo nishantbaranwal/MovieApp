@@ -1,11 +1,11 @@
-package com.theavengers.movieapp.model
+package com.theavengers.movieapp2.model
 
 import com.google.gson.annotations.SerializedName
 
 class ResultList {
 
     @SerializedName("results")
-    public val resultList:ArrayList<Results>? = null;
+    public val resultList: ArrayList<Results>? = null
 
     class Results{
 

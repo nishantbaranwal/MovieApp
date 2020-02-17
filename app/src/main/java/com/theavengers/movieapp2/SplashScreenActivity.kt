@@ -1,8 +1,9 @@
-package com.theavengers.movieapp
+package com.theavengers.movieapp2
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.theavengers.movieapp2.R
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -18,7 +19,8 @@ class SplashScreenActivity : AppCompatActivity() {
         super.onResume()
         compositeDisposable.add(Observable.timer(2,TimeUnit.SECONDS).subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread()).subscribe {
-                val intent = Intent(applicationContext,LoginActivity::class.java)
+                val intent = Intent(applicationContext,
+                    LoginActivity::class.java)
                 startActivity(intent)
                 finish()
             }
