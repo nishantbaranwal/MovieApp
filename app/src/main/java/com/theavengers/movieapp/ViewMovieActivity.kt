@@ -4,6 +4,7 @@ import android.app.ProgressDialog
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -19,24 +20,25 @@ import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import retrofit2.Response
 
-class ViewMovieActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
+class ViewMovieActivity : AppCompatActivity(),SearchView.OnQueryTextListener{
 
     var resultList: ResultList?= null
     var disposable: Disposable?= null
     var adapter : TopMoviesAdapter ?= null
     override fun onQueryTextSubmit(query: String?): Boolean {
-        for(results : ResultList.Results in resultList?.resultList!!) {
-            if (results.original_title.equals(query)) {
-                resultList?.let { updateUI(it) }
-            }
-        }
         return false
     }
 
     override fun onQueryTextChange(newText: String?): Boolean {
-        newText?.let { adapter?.filter(it) }
-        resultList?.let { updateUI(it) }
-
+        Log.d("asfsafsaf",resultList?.resultList.toString())
+        if(resultList?.resultList?.size!! > 0) {
+            newText?.let {
+                Log.d("New_Result",adapter?.filter(it, resultList).toString())
+            }
+        }
+        else{
+              Toast.makeText(this@ViewMovieActivity,resultList?.resultList.toString(),Toast.LENGTH_LONG).show()
+            }
         return false
     }
 
@@ -44,18 +46,12 @@ class ViewMovieActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_view_movie)
-
-        val viewPager:ViewPager = findViewById(R.id.viewPager)
-        val tabLayout:TabLayout = findViewById(R.id.tabLayout)
-        val viewPagerAdapter = ViewPagerAdapter(this, supportFragmentManager)
-        val searchView:SearchView = findViewById(R.id.search_view)
         val theMovieDbApiInterface : TheMovieDbApiInterface? = getRetrofit()?.
             create(TheMovieDbApiInterface::class.java)
         val responseSingleResultList : Single<Response<ResultList>>? = theMovieDbApiInterface?.
             getPopularKidsMovies()
         val progressDialog = ProgressDialog(this)
 
-        searchView.setOnQueryTextListener(this)
 
 
         progressDialog.max = 100
@@ -71,7 +67,14 @@ class ViewMovieActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
             override fun onSuccess(t: Response<ResultList>) {
                 Log.d("IsConnectionSuccessfull", (t.code().toString()));
                 resultList = t.body();
-//                resultList?.let { updateUI(it) };
+                setResultListing(resultList!!)
+
+                Log.d("Resjhfdjf",resultList?.resultList.toString())
+
+                adapter = TopMoviesAdapter(resultList?.resultList ,this@ViewMovieActivity)
+//                adapter?.notifyDataSetChanged()
+                val searchView:SearchView = findViewById(R.id.search_view)
+                searchView.setOnQueryTextListener(this@ViewMovieActivity)
                 progressDialog.dismiss()
             }
 
@@ -86,19 +89,23 @@ class ViewMovieActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
 
         })
 
+        val viewPager:ViewPager = findViewById(R.id.viewPager)
+        val tabLayout:TabLayout = findViewById(R.id.tabLayout)
+        val viewPagerAdapter = ViewPagerAdapter(this, supportFragmentManager)
+
         viewPager.setAdapter(viewPagerAdapter)
         tabLayout.setupWithViewPager(viewPager)
 
     }
 
-    private fun updateUI(resultList: ResultList) {
+    private fun updateUI(resultList: ArrayList<ResultList.Results>) {
         val recyclerView: RecyclerView? = findViewById(R.id.recyclerView)
         val layoutManager = LinearLayoutManager(this)
 
         recyclerView?.setLayoutManager(layoutManager)
         recyclerView?.setHasFixedSize(true)
 
-        adapter = TopMoviesAdapter(resultList.resultList,this)
+        adapter = TopMoviesAdapter(resultList ,this)
         recyclerView?.adapter = adapter
 
     }
@@ -106,5 +113,12 @@ class ViewMovieActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
     override fun onDestroy() {
         super.onDestroy()
         disposable?.dispose()
+    }
+
+    fun setResultListing(newResultList: ResultList){
+        this.resultList = newResultList
+    }
+    fun getResultListing():ResultList{
+        return this.resultList!!
     }
 }

@@ -11,10 +11,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.theavengers.movieapp.model.ResultList
 import java.util.*
+import kotlin.collections.ArrayList
 
-class TopMoviesAdapter(result: List<ResultList.Results>?, val ctx: Context) : RecyclerView.Adapter<TopMoviesAdapter.MyViewHolder>() {
 
-    var resultList : List<ResultList.Results>? = result
+class TopMoviesAdapter(result: ArrayList<ResultList.Results>?, val ctx: Context) : RecyclerView.Adapter<TopMoviesAdapter.MyViewHolder>() {
+
+    var resultList1 : ArrayList<ResultList.Results>? = result
     var context : Context = ctx
 
     override fun onCreateViewHolder(
@@ -27,15 +29,15 @@ class TopMoviesAdapter(result: List<ResultList.Results>?, val ctx: Context) : Re
     }
 
     override fun getItemCount(): Int {
-        return resultList?.size!!
+        return resultList1?.size!!
     }
-    
+
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-        Glide.with(context).load("https://image.tmdb.org/t/p/w185"+resultList?.get(position)?.poster_path).into(holder.iv_poster_path)
-        holder.tv_original_language.setText(resultList?.get(position)?.original_language)
-        holder.tv_original_title.setText(resultList?.get(position)?.original_title)
-        holder.tv_release_date.setText(resultList?.get(position)?.release_date)
+        Glide.with(context).load("https://image.tmdb.org/t/p/w185"+resultList1?.get(position)?.poster_path).into(holder.iv_poster_path)
+        holder.tv_original_language.setText(resultList1?.get(position)?.original_language)
+        holder.tv_original_title.setText(resultList1?.get(position)?.original_title)
+        holder.tv_release_date.setText(resultList1?.get(position)?.release_date)
     }
 
     class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -45,27 +47,60 @@ class TopMoviesAdapter(result: List<ResultList.Results>?, val ctx: Context) : Re
         var tv_release_date : TextView = itemView.findViewById(R.id.release_date)
     }
 
-    fun filter(charText1: String) {
-       var charText = charText1
-        Log.d("Asedd",charText)
+//    fun filter(charText1: String): ArrayList<ResultList.Results>{
+//       var charText = charText1
+//        Log.d("Asedd",charText+" resultlistsize "+ resultList?.size+"")
+//        charText = charText.toLowerCase()
+////        ((context as ViewMovieActivity).resultList?.resultList as ArrayList).clear()
+//
+//        if (charText.length == 0) {
+//            resultList?.addAll((context as ViewMovieActivity).resultList?.resultList as ArrayList)
+//        }
+//        else{
+//            val iter:Iterator<ResultList.Results> = ((context as ViewMovieActivity).resultList?.resultList as ArrayList).iterator()
+//            while(iter.hasNext()){
+//
+//                val results:ResultList.Results = iter.next()
+//                Log.d("Original_Title",results.original_title)
+//
+//                if(results.original_title.toLowerCase().contains(charText)) {
+//                    Log.d("Original_Title1", results.original_title)
+//                    resultList?.add(results)
+//                }
+//            }
+//        }
+//        notifyDataSetChanged()
+//        return resultList!!
+//    }
+
+    fun filter(charText: String, newResultList: ResultList?):ArrayList<ResultList.Results> {
+
+        Log.d("searched_content",charText)
+
+        var charText = charText
+        var resultList2:ResultList? = newResultList as ResultList
+
         charText = charText.toLowerCase(Locale.getDefault())
-        ((context as ViewMovieActivity).resultList?.resultList as ArrayList).clear()
+
+//        resultList2?.resultList?.clear()
         if (charText.length == 0) {
-            ((context as ViewMovieActivity).resultList?.resultList as ArrayList).addAll(resultList!!)
-        }
-        else{
-            val iter:Iterator<ResultList.Results> = resultList!!.iterator()
-            while(iter.hasNext()){
-
-                val results:ResultList.Results = iter.next()
-                Log.d("Original_Title",results.original_title)
-
-                if(results.original_title.toLowerCase().contains(charText)) {
-                    Log.d("Original_Title1", results.original_title)
-                    ((context as ViewMovieActivity).resultList?.resultList as ArrayList).add(results)
-                }
+            resultList2?.resultList?.let {
+                resultList2.resultList!!.addAll(it)
+//                (context as ViewMovieActivity).resultList?.resultList?.addAll(
+//                    it
+//                )
             }
+        } else {
+
+//            for (movieInfo in resultList2?.resultList!!) {
+//                Log.d("String_Diff",movieInfo.original_title.toLowerCase(Locale.getDefault())+"    "+ charText)
+//                if (movieInfo.original_title.toLowerCase(Locale.getDefault()).contains(charText)) {
+//                    resultList2?.resultList?.add(movieInfo)
+//                    Log.d(movieInfo.original_title,"Original_title")
+//                }
+//            }
         }
-        notifyDataSetChanged()
+        return resultList2!!.resultList!!
     }
+
 }

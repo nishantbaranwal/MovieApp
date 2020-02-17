@@ -77,7 +77,7 @@ class TopKidMoviesFragment(context: Context) : Fragment() {
         recyclerView?.setLayoutManager(layoutManager)
         recyclerView?.setHasFixedSize(true)
 
-        val adapter = TopMoviesAdapter(resultList.resultList,ctx)
+        val adapter = TopMoviesAdapter(resultList.resultList as ArrayList<ResultList.Results>,ctx)
         recyclerView?.adapter = adapter
     }
 

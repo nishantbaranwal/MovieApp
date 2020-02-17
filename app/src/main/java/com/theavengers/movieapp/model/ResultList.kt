@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName
 class ResultList {
 
     @SerializedName("results")
-    public val resultList:List<Results>? = null;
+    public val resultList:ArrayList<Results>? = null;
 
     class Results{
 
