@@ -3,8 +3,7 @@ package com.theavengers.movieapp2
 import android.app.ProgressDialog
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.View
-import android.widget.Toast
+import android.os.Handler
 import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -21,11 +20,13 @@ import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import retrofit2.Response
 
+
 class ViewMovieActivity : AppCompatActivity(),SearchView.OnQueryTextListener{
 
     var resultList: ResultList?= null
     var disposable: Disposable?= null
     var adapter : TopMoviesAdapter?= null
+    val mHandler:Handler = Handler();
     override fun onQueryTextSubmit(query: String?): Boolean {
         return false
     }
@@ -45,12 +46,21 @@ class ViewMovieActivity : AppCompatActivity(),SearchView.OnQueryTextListener{
 //        else{
 //              Toast.makeText(this@ViewMovieActivity,resultList?.resultList.toString(),Toast.LENGTH_LONG).show()
 //            }
-        if (newText != null && newText.length>3) {
-            searchWithText(newText)
-            if(resultList?.resultList!=null)
-                updateUI(resultList?.resultList!!)
-        }
-        return false
+
+        mHandler.removeCallbacksAndMessages(null);
+        mHandler.postDelayed(object :Runnable{
+            override fun run() {
+                if (newText != null && newText.length>0) {
+                    searchWithText(newText)
+                    if(resultList?.resultList!=null)
+                        updateUI(resultList?.resultList!!)
+                }
+            }
+        }, 300)
+
+
+
+        return true
     }
 
 
@@ -76,8 +86,7 @@ class ViewMovieActivity : AppCompatActivity(),SearchView.OnQueryTextListener{
 
     fun searchWithText(searchKey:String) {
         val theMovieDbApiInterface : TheMovieDbApiInterface? = getRetrofit()
-            ?.
-                create(TheMovieDbApiInterface::class.java)
+            ?.create(TheMovieDbApiInterface::class.java)
         val responseSingleResultList : Single<Response<ResultList>>? = theMovieDbApiInterface?.
             searchData(searchKey,"bfe85bf7d7aac066e48cfa121ec821cc",2)
         val progressDialog = ProgressDialog(this)

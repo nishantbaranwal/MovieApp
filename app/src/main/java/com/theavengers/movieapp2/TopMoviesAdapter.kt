@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.theavengers.movieapp2.R
 import com.theavengers.movieapp2.model.ResultList
+import java.io.Serializable
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -42,7 +43,12 @@ class TopMoviesAdapter(result: ArrayList<ResultList.Results>?, val ctx: Context)
         holder.tv_original_title.setText(resultList1?.get(position)?.original_title)
         holder.tv_release_date.setText(resultList1?.get(position)?.release_date)
         holder.cardView.setOnClickListener(View.OnClickListener {
-            context.startActivity(Intent(context,PlayerActivity::class.java))
+
+            val intent = Intent(context,PlayerActivity::class.java)
+//            val passData:ResultList.Results = resultList1!!.get(position)
+            intent.putExtra("passedData",resultList1?.get(position))
+            context.startActivity(intent)
+
         })
     }
 

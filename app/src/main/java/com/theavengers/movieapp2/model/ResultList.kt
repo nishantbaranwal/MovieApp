@@ -1,13 +1,14 @@
 package com.theavengers.movieapp2.model
 
 import com.google.gson.annotations.SerializedName
+import java.io.Serializable
 
 class ResultList {
 
     @SerializedName("results")
     public val resultList: ArrayList<Results>? = null
 
-    class Results{
+    class Results : Serializable{
 
         @SerializedName("popularity")
         val popularity:Double = 0.0
