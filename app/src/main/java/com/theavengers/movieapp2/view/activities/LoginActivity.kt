@@ -1,4 +1,4 @@
-package com.theavengers.movieapp2
+package com.theavengers.movieapp2.view.activities
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -19,6 +19,7 @@ import com.google.android.gms.tasks.Task
 import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
+import com.theavengers.movieapp2.R
 import kotlinx.android.synthetic.main.activity_login.*
 
 
@@ -44,7 +45,7 @@ class LoginActivity : AppCompatActivity(),View.OnClickListener {
 
         FirebaseApp.initializeApp(this);
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-            .requestIdToken("486358761316-l0ibf1uqc97gvbk57hmthvj2ccndltdk.apps.googleusercontent.com")
+            .requestIdToken(resources.getString(R.string.token_id))
             .requestEmail()
             .build()
         auth = FirebaseAuth.getInstance()

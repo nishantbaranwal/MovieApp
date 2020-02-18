@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">MovieApp</string>
+    <string name="movie_search">Search Movies Here</string>
+    <string name="movie_app">The Movie App</string>
+    <string name="email_id">Email Id</string>
+    <string name="login">Login</string>
+    <string name="token_id">486358761316-l0ibf1uqc97gvbk57hmthvj2ccndltdk.apps.googleusercontent.com</string>
 </resources>

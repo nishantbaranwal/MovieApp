@@ -1,4 +1,4 @@
-package com.theavengers.movieapp2
+package com.theavengers.movieapp2.view.fragments
 
 import android.app.ProgressDialog
 import android.content.Context
@@ -12,8 +12,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.theavengers.movieapp2.R
 import com.theavengers.movieapp2.model.ResultList
-import com.theavengers.movieapp2.model.TheMovieDbApiInterface
-import com.theavengers.movieapp2.model.getRetrofit
+import com.theavengers.movieapp2.repository.api.TheMovieDbApiInterface
+import com.theavengers.movieapp2.viewmodel.getRetrofit
+import com.theavengers.movieapp2.viewmodel.TopMoviesAdapter
 import io.reactivex.Single
 import io.reactivex.SingleObserver
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -21,26 +22,25 @@ import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import retrofit2.Response
 
+class YearBestMoviesFragment(context: Context) : Fragment() {
 
-class TopMoviesFragment(context: Context) : Fragment() {
-
-    var ctx:Context = context
-    var disposable:Disposable ?= null
-    var resultList: ResultList?= null
-    var fragmentView:View ?= null
+    var ctx: Context = context
+    var disposable: Disposable? = null
+    var resultList: ResultList? = null
+    var fragmentView: View? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        fragmentView = inflater.inflate(R.layout.fragment_top_movies,container,false)
+        fragmentView = inflater.inflate(R.layout.fragment_top_movies, container, false)
 
-        val theMovieDbApiInterface : TheMovieDbApiInterface? = getRetrofit()
-            ?.
-            create(TheMovieDbApiInterface::class.java)
-        val responseSingleResultList : Single<Response<ResultList>>? = theMovieDbApiInterface?.
-            getResultList()
+        val theMovieDbApiInterface: TheMovieDbApiInterface? =
+            getRetrofit()
+                ?.create(TheMovieDbApiInterface::class.java)
+        val responseSingleResultList: Single<Response<ResultList>>? =
+            theMovieDbApiInterface?.getYearTopDramas()
         val progressDialog = ProgressDialog(ctx)
 
         progressDialog.max = 100
@@ -50,8 +50,8 @@ class TopMoviesFragment(context: Context) : Fragment() {
         progressDialog.show()
 
         responseSingleResultList?.subscribeOn(Schedulers.io())?.observeOn(
-            AndroidSchedulers.
-                mainThread())?.subscribe(object : SingleObserver<Response<ResultList>> {
+            AndroidSchedulers.mainThread()
+        )?.subscribe(object : SingleObserver<Response<ResultList>> {
 
             override fun onSuccess(t: Response<ResultList>) {
                 Log.d("IsConnectionSuccessfull", (t.code().toString()));
@@ -66,30 +66,29 @@ class TopMoviesFragment(context: Context) : Fragment() {
 
             override fun onError(e: Throwable) {
                 progressDialog.dismiss()
-                Log.d("ConnectionUnsuccessfull",e.message)
+                Log.d("ConnectionUnsuccessfull", e.message)
             }
 
         })
         return fragmentView
     }
 
-    fun updateUI(resultList: ResultList){
-            val recyclerView: RecyclerView? = fragmentView?.findViewById(R.id.recyclerView)
-            val layoutManager = LinearLayoutManager(ctx)
+    fun updateUI(resultList: ResultList) {
+        val recyclerView: RecyclerView? = fragmentView?.findViewById(R.id.recyclerView)
+        val layoutManager = LinearLayoutManager(ctx)
 
-            recyclerView?.setLayoutManager(layoutManager)
-            recyclerView?.setHasFixedSize(true)
+        recyclerView?.setLayoutManager(layoutManager)
+        recyclerView?.setHasFixedSize(true)
 
-            val adapter = TopMoviesAdapter(
-                resultList.resultList as ArrayList<ResultList.Results>,
-                ctx
-            )
-            recyclerView?.adapter = adapter
+        val adapter = TopMoviesAdapter(
+            resultList.resultList as ArrayList<ResultList.Results>,
+            ctx
+        )
+        recyclerView?.adapter = adapter
     }
 
     override fun onDestroy() {
         super.onDestroy()
         disposable?.dispose()
     }
-
 }

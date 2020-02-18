@@ -4,13 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.theavengers.movieapp2.ViewMovieActivity"
+    tools:context="com.theavengers.movieapp2.view.activities.ViewMovieActivity"
     android:background="@drawable/gradient"
     android:orientation="vertical">
 
     <androidx.appcompat.widget.SearchView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        app:defaultQueryHint="@string/movie_search"
         android:id="@+id/search_view"/>
     <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"

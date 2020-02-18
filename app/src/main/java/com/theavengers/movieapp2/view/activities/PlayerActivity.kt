@@ -1,13 +1,11 @@
-package com.theavengers.movieapp2
+package com.theavengers.movieapp2.view.activities
 
 import android.content.pm.ActivityInfo
 import android.content.res.Configuration
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
-import android.widget.MediaController
 import android.widget.RelativeLayout
-import com.ltts.lttsplayer.LTTSPlayerContainer
 import com.ltts.lttsplayer.LTTSPlayerView
 import com.ltts.lttsplayer.configuration.PlayerConfig
 import com.ltts.lttsplayer.events.Error
@@ -15,6 +13,7 @@ import com.ltts.lttsplayer.events.listeners.MediaControllerEvents
 import com.ltts.lttsplayer.events.listeners.VideoPlayerEvents
 import com.ltts.lttsplayer.playlists.PlaylistItem
 import com.ltts.lttsplayer.ui.MediaPlayerControl
+import com.theavengers.movieapp2.R
 import kotlinx.android.synthetic.main.activity_player.*
 
 class PlayerActivity : AppCompatActivity(),MediaControllerEvents, VideoPlayerEvents.OnPlayerEventListener, VideoPlayerEvents.OnPlayerSetupListener {

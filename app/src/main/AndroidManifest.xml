@@ -15,14 +15,14 @@
         tools:ignore="GoogleAppIndexingWarning">
         <activity android:name=".DetailsActivity"></activity>
         <activity
-            android:name=".PlayerActivity"
+            android:name=".view.activities.PlayerActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ViewMovieActivity"
+            android:name=".view.activities.ViewMovieActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".SplashScreenActivity"
+            android:name=".view.activities.SplashScreenActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -31,7 +31,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".LoginActivity"
+            android:name=".view.activities.LoginActivity"
             android:screenOrientation="portrait" />
     </application>
 

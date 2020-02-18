@@ -1,4 +1,4 @@
-package com.theavengers.movieapp2
+package com.theavengers.movieapp2.viewmodel
 
 import android.content.Context
 import android.content.Intent
@@ -7,15 +7,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.theavengers.movieapp2.R
 import com.theavengers.movieapp2.model.ResultList
-import java.io.Serializable
+import com.theavengers.movieapp2.view.activities.PlayerActivity
 import java.util.*
-import kotlin.collections.ArrayList
 
 
 class TopMoviesAdapter(result: ArrayList<ResultList.Results>?, val ctx: Context) : RecyclerView.Adapter<TopMoviesAdapter.MyViewHolder>() {
@@ -29,7 +27,9 @@ class TopMoviesAdapter(result: ArrayList<ResultList.Results>?, val ctx: Context)
     ): MyViewHolder {
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.cardview_layout,parent,false)
-        return MyViewHolder(view)
+        return MyViewHolder(
+            view
+        )
     }
 
     override fun getItemCount(): Int {
@@ -44,7 +44,8 @@ class TopMoviesAdapter(result: ArrayList<ResultList.Results>?, val ctx: Context)
         holder.tv_release_date.setText(resultList1?.get(position)?.release_date)
         holder.cardView.setOnClickListener(View.OnClickListener {
 
-            val intent = Intent(context,PlayerActivity::class.java)
+            val intent = Intent(context,
+                PlayerActivity::class.java)
 //            val passData:ResultList.Results = resultList1!!.get(position)
             intent.putExtra("passedData",resultList1?.get(position))
             context.startActivity(intent)
@@ -88,4 +89,14 @@ class TopMoviesAdapter(result: ArrayList<ResultList.Results>?, val ctx: Context)
         }
     }
 
+    fun addNewData(resultList: ArrayList<ResultList.Results>?) {
+        var newData = arrayListOf<ResultList.Results>()
+        resultList?.clear()
+        newData = resultList!!
+        resultList1?.addAll(newData)
+        this.notifyDataSetChanged()
+    }
+    override fun getItemViewType(position: Int): Int {
+        return resultList1?.size!! -1
+    }
 }

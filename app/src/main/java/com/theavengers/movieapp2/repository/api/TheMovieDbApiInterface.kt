@@ -1,5 +1,6 @@
-package com.theavengers.movieapp2.model
+package com.theavengers.movieapp2.repository.api
 
+import com.theavengers.movieapp2.model.ResultList
 import io.reactivex.Single
 import retrofit2.Response
 import retrofit2.http.GET

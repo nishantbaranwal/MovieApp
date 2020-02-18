@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/gradient"
-    tools:context="com.theavengers.movieapp2.LoginActivity">
+    tools:context="com.theavengers.movieapp2.view.activities.LoginActivity">
 
     <ImageView
         android:layout_width="120dp"
@@ -27,7 +27,7 @@
         android:textColor="#ffffff"
         android:textStyle="italic|bold"
         android:fontFamily="@font/dancing_script_bold"
-        android:text="The Movie App" />
+        android:text="@string/movie_app" />
 
     <EditText
         android:layout_width="match_parent"
@@ -39,7 +39,7 @@
         android:textSize="16sp"
         android:inputType="textEmailAddress"
         android:layout_margin="4dp"
-        android:hint="Email Id"
+        android:hint="@string/email_id"
         android:textColor="#ffffff"
         android:layout_centerInParent="true"/>
 
@@ -62,7 +62,7 @@
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_centerInParent="true"
-        android:text="Login"
+        android:text="@string/login"
         android:id="@+id/btn_login"
         android:layout_below="@id/et_password"/>
 

@@ -1,4 +1,4 @@
-package com.theavengers.movieapp2
+package com.theavengers.movieapp2.view.activities
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity

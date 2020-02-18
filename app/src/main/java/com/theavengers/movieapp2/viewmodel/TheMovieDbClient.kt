@@ -1,4 +1,4 @@
-package com.theavengers.movieapp2.model
+package com.theavengers.movieapp2.viewmodel
 
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
