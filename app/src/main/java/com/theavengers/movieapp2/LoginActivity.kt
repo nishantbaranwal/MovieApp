@@ -8,7 +8,10 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn
 import android.widget.Toast
 import com.google.android.gms.common.SignInButton
 import android.content.Intent
+import android.content.SharedPreferences
 import android.util.Log
+import android.widget.Button
+import android.widget.EditText
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.common.api.ApiException
@@ -18,6 +21,7 @@ import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import com.theavengers.movieapp2.R
+import kotlinx.android.synthetic.main.activity_login.*
 
 
 class LoginActivity : AppCompatActivity(),View.OnClickListener {
@@ -26,7 +30,12 @@ class LoginActivity : AppCompatActivity(),View.OnClickListener {
     var RC_SIGN_IN:Int = 101
     var TAG = "LoginActivity"
     private lateinit var auth: FirebaseAuth
-
+    lateinit var email_et  :EditText
+    lateinit var password_et  :EditText
+    private var PRIVATE_MODE = 0
+    private val PREF_NAME = "login_shared_preference"
+    val sharedPref: SharedPreferences = getSharedPreferences(PREF_NAME, PRIVATE_MODE)
+    val editor: SharedPreferences.Editor = sharedPref.edit()
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
@@ -41,21 +50,21 @@ class LoginActivity : AppCompatActivity(),View.OnClickListener {
         auth = FirebaseAuth.getInstance()
 
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+
         val signInButton :SignInButton = findViewById(R.id.sign_in_button);
         signInButton.setSize(SignInButton.SIZE_STANDARD);
         signInButton.setOnClickListener(this)
 
+        email_et = findViewById<EditText>(R.id.et_email)
+        password_et = findViewById<EditText>(R.id.et_password)
+        val login_btn = findViewById<Button>(R.id.btn_login)
+        login_btn.setOnClickListener(this)
     }
 
     override fun onStart() {
         super.onStart()
-//        val account = GoogleSignIn.getLastSignedInAccount(this)
-//        if(account!=null){
-//            startActivity(Intent(applicationContext,ViewMovieActivity::class.java))
-//        }
-        // Check if user is signed in (non-null) and update UI accordingly.
         val currentUser = auth.currentUser
-        if(currentUser!=null){
+        if(currentUser!=null || sharedPref.getBoolean("loginned", false)){
             startActivity(Intent(applicationContext,
                 ViewMovieActivity::class.java))
         }
@@ -64,8 +73,28 @@ class LoginActivity : AppCompatActivity(),View.OnClickListener {
     override fun onClick(v: View?) {
         when(v?.id){
             R.id.sign_in_button -> signIn()
+            R.id.btn_login -> offlineSignIn()
         }
     }
+
+    private fun offlineSignIn() {
+        if(android.util.Patterns.EMAIL_ADDRESS.matcher(email_et.text.toString()).matches()) {
+            if (et_email.text.toString().equals("nishant@gmail.com") && password_et.text.toString().equals("1234567890")) {
+                editor.putBoolean("loginned", true)
+                editor.apply()
+                startActivity(
+                    Intent(
+                        applicationContext,
+                        ViewMovieActivity::class.java
+                    )
+                )
+            }
+        }
+        else
+            Toast.makeText(this,"Wrong Email Id Or Password",Toast.LENGTH_LONG).show()
+
+    }
+
     private fun signIn() {
         val signInIntent = mGoogleSignInClient?.signInIntent
         startActivityForResult(signInIntent, RC_SIGN_IN)
