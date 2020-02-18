@@ -16,11 +16,9 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.Task
-import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
-import com.theavengers.movieapp2.R
 import kotlinx.android.synthetic.main.activity_login.*
 
 
@@ -34,17 +32,19 @@ class LoginActivity : AppCompatActivity(),View.OnClickListener {
     lateinit var password_et  :EditText
     private var PRIVATE_MODE = 0
     private val PREF_NAME = "login_shared_preference"
-    val sharedPref: SharedPreferences = getSharedPreferences(PREF_NAME, PRIVATE_MODE)
-    val editor: SharedPreferences.Editor = sharedPref.edit()
+    lateinit var sharedPref  :SharedPreferences
+    lateinit var editor  :SharedPreferences.Editor
+
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
-
+        sharedPref = getSharedPreferences(PREF_NAME, PRIVATE_MODE)
+        editor = sharedPref.edit()
 
         FirebaseApp.initializeApp(this);
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-            .requestIdToken("1174210476-i02r3e78vs7pn2lld53ig73m66n773pv.apps.googleusercontent.com")
+            .requestIdToken("486358761316-l0ibf1uqc97gvbk57hmthvj2ccndltdk.apps.googleusercontent.com")
             .requestEmail()
             .build()
         auth = FirebaseAuth.getInstance()
@@ -82,6 +82,7 @@ class LoginActivity : AppCompatActivity(),View.OnClickListener {
             if (et_email.text.toString().equals("nishant@gmail.com") && password_et.text.toString().equals("1234567890")) {
                 editor.putBoolean("loginned", true)
                 editor.apply()
+                editor.commit()
                 startActivity(
                     Intent(
                         applicationContext,
@@ -114,8 +115,6 @@ class LoginActivity : AppCompatActivity(),View.OnClickListener {
                 ViewMovieActivity::class.java))
             val account: GoogleSignInAccount? = task.getResult(ApiException:: class.java)
             firebaseAuthWithGoogle(account!!)
-
-
         }
         catch (e:ApiException){
             Log.w(TAG, "signInResult:failed code=" + e.getStatusCode());
@@ -134,13 +133,9 @@ class LoginActivity : AppCompatActivity(),View.OnClickListener {
                     startActivity(Intent(applicationContext,
                         ViewMovieActivity::class.java))
                 } else {
-                    // If sign in fails, display a message to the user.
                     Log.w(TAG, "signInWithCredential:failure", task.exception)
-//                    Snackbar.make(main_layout, "Authentication Failed.", Snackbar.LENGTH_SHORT).show()
-//                    updateUI(null)
                 }
 
-                // ...
             }
     }
 }
