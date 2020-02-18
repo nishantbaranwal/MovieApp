@@ -127,11 +127,12 @@ class LoginActivity : AppCompatActivity(),View.OnClickListener {
         auth.signInWithCredential(credential)
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
-                    // Sign in success, update UI with the signed-in user's information
+
                     Log.d(TAG, "signInWithCredential:success")
                     val user = auth.currentUser
                     startActivity(Intent(applicationContext,
                         ViewMovieActivity::class.java))
+
                 } else {
                     Log.w(TAG, "signInWithCredential:failure", task.exception)
                 }

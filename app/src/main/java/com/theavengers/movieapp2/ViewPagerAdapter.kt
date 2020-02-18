@@ -1,6 +1,7 @@
 package com.theavengers.movieapp2
 
 import android.content.Context
+import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
@@ -33,4 +34,6 @@ class ViewPagerAdapter(context: Context, supportFragmentManager: FragmentManager
         else
                 return "2010 Best Dramas"
     }
+
+
 }

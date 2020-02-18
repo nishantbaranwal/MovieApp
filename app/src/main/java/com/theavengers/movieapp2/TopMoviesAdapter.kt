@@ -1,11 +1,14 @@
 package com.theavengers.movieapp2
 
 import android.content.Context
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
+import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.theavengers.movieapp2.R
@@ -38,9 +41,13 @@ class TopMoviesAdapter(result: ArrayList<ResultList.Results>?, val ctx: Context)
         holder.tv_original_language.setText(resultList1?.get(position)?.original_language)
         holder.tv_original_title.setText(resultList1?.get(position)?.original_title)
         holder.tv_release_date.setText(resultList1?.get(position)?.release_date)
+        holder.cardView.setOnClickListener(View.OnClickListener {
+            context.startActivity(Intent(context,PlayerActivity::class.java))
+        })
     }
 
     class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        var cardView = itemView.findViewById<CardView>(R.id.cardView)
         var iv_poster_path : ImageView = itemView.findViewById(R.id.iv_poster_path)
         var tv_original_title : TextView = itemView.findViewById(R.id.original_title)
         var tv_original_language : TextView = itemView.findViewById(R.id.original_language)

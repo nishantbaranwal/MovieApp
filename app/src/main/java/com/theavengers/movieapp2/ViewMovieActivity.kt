@@ -3,6 +3,7 @@ package com.theavengers.movieapp2
 import android.app.ProgressDialog
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -30,20 +31,25 @@ class ViewMovieActivity : AppCompatActivity(),SearchView.OnQueryTextListener{
     }
 
     override fun onQueryTextChange(newText: String?): Boolean {
-        if(resultList?.resultList?.size!! > 0) {
-            var searchedList = ResultList().resultList
-            searchedList = newText?.let {
-                adapter?.filter(it, resultList!!)
-            }
-            if (searchedList != null) {
-                updateUI(searchedList)
-            }
-            else
-                Toast.makeText(this@ViewMovieActivity,"Content is null",Toast.LENGTH_LONG).show()
+//        if(resultList?.resultList?.size!! > 0) {
+//            var searchedList = ResultList().resultList
+//            searchedList = newText?.let {
+//                adapter?.filter(it, resultList!!)
+//            }
+//            if (searchedList != null) {
+//                updateUI(searchedList)
+//            }
+//            else
+//                Toast.makeText(this@ViewMovieActivity,"Content is null",Toast.LENGTH_LONG).show()
+//        }
+//        else{
+//              Toast.makeText(this@ViewMovieActivity,resultList?.resultList.toString(),Toast.LENGTH_LONG).show()
+//            }
+        if (newText != null && newText.length>3) {
+            searchWithText(newText)
+            if(resultList?.resultList!=null)
+                updateUI(resultList?.resultList!!)
         }
-        else{
-              Toast.makeText(this@ViewMovieActivity,resultList?.resultList.toString(),Toast.LENGTH_LONG).show()
-            }
         return false
     }
 
@@ -54,11 +60,26 @@ class ViewMovieActivity : AppCompatActivity(),SearchView.OnQueryTextListener{
         val searchView:SearchView = findViewById(R.id.search_view)
         searchView.setOnQueryTextListener(this@ViewMovieActivity)
 
+        val viewPager:ViewPager = findViewById(R.id.viewPager)
+        val tabLayout:TabLayout = findViewById(R.id.tabLayout)
+        val viewPagerAdapter = ViewPagerAdapter(
+            this,
+            supportFragmentManager
+        )
+
+        viewPager.setAdapter(viewPagerAdapter)
+        viewPager.setCurrentItem(0)
+        tabLayout.setupWithViewPager(viewPager)
+
+    }
+
+
+    fun searchWithText(searchKey:String) {
         val theMovieDbApiInterface : TheMovieDbApiInterface? = getRetrofit()
             ?.
-            create(TheMovieDbApiInterface::class.java)
+                create(TheMovieDbApiInterface::class.java)
         val responseSingleResultList : Single<Response<ResultList>>? = theMovieDbApiInterface?.
-            getPopularKidsMovies()
+            searchData(searchKey,"bfe85bf7d7aac066e48cfa121ec821cc",2)
         val progressDialog = ProgressDialog(this)
         progressDialog.max = 100
         progressDialog.setMessage("Its loading....")
@@ -88,17 +109,6 @@ class ViewMovieActivity : AppCompatActivity(),SearchView.OnQueryTextListener{
             }
 
         })
-
-        val viewPager:ViewPager = findViewById(R.id.viewPager)
-        val tabLayout:TabLayout = findViewById(R.id.tabLayout)
-        val viewPagerAdapter = ViewPagerAdapter(
-            this,
-            supportFragmentManager
-        )
-
-        viewPager.setAdapter(viewPagerAdapter)
-        tabLayout.setupWithViewPager(viewPager)
-
     }
 
     private fun updateUI(resultList: ArrayList<ResultList.Results>) {
