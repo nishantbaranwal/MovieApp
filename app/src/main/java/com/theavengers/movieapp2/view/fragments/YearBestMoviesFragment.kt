@@ -125,9 +125,9 @@ class YearBestMoviesFragment(context: Context) : Fragment() {
         val responseSingleResultList : Single<Response<ResultList>>? = theMovieDbApiInterface?.
             getYearTopDramas(pageNumber)
         val progressDialog = ProgressDialog(ctx)
-//        progressDialog.max = 100
-//        progressDialog.setMessage("Its loading....")
-//        progressDialog.setTitle("Downloading")
+        progressDialog.max = 100
+        progressDialog.setMessage("Its loading....")
+        progressDialog.setTitle("Downloading")
         progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER)
         progressDialog.show()
 
