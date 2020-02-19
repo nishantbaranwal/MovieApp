@@ -2,6 +2,7 @@ package com.theavengers.movieapp2.viewmodel
 
 import android.content.Context
 import android.content.Intent
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,10 +14,12 @@ import com.bumptech.glide.Glide
 import com.theavengers.movieapp2.R
 import com.theavengers.movieapp2.model.ResultList
 import com.theavengers.movieapp2.view.activities.PlayerActivity
+import com.theavengers.movieapp2.view.activities.ViewMovieActivity
 import java.util.*
 
 
-class TopMoviesAdapter(result: ArrayList<ResultList.Results>?, val ctx: Context) : RecyclerView.Adapter<TopMoviesAdapter.MyViewHolder>() {
+class MoviesAdapter(result: ArrayList<ResultList.Results>?, val ctx: Context) : RecyclerView.Adapter<MoviesAdapter.MyViewHolder>() {
+
 
     var resultList1 : ArrayList<ResultList.Results>? = result
     var context : Context = ctx
@@ -33,24 +36,37 @@ class TopMoviesAdapter(result: ArrayList<ResultList.Results>?, val ctx: Context)
     }
 
     override fun getItemCount(): Int {
+        if(resultList1 != null)
         return resultList1?.size!!
+        else
+            return 0
     }
 
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-        Glide.with(context).load("https://image.tmdb.org/t/p/w185"+resultList1?.get(position)?.poster_path).into(holder.iv_poster_path)
-        holder.tv_original_language.setText(resultList1?.get(position)?.original_language)
-        holder.tv_original_title.setText(resultList1?.get(position)?.original_title)
-        holder.tv_release_date.setText(resultList1?.get(position)?.release_date)
-        holder.cardView.setOnClickListener(View.OnClickListener {
+        if(context is ViewMovieActivity) {
+            Log.d("dfdf", resultList1?.get(position)?.original_language)
+        }
+        if (resultList1?.get(position)?.original_language != null) {
+            Glide.with(context)
+                .load("https://image.tmdb.org/t/p/w185" + resultList1?.get(position)?.poster_path)
+                .into(holder.iv_poster_path)
+            holder.tv_original_language.setText(resultList1?.get(position)?.original_language)
+            holder.tv_original_title.setText(resultList1?.get(position)?.original_title)
+            holder.tv_release_date.setText(resultList1?.get(position)?.release_date)
+            holder.cardView.setOnClickListener(View.OnClickListener {
 
-            val intent = Intent(context,
-                PlayerActivity::class.java)
+                val intent = Intent(
+                    context,
+                    PlayerActivity::class.java
+                )
 //            val passData:ResultList.Results = resultList1!!.get(position)
-            intent.putExtra("passedData",resultList1?.get(position))
-            context.startActivity(intent)
+                intent.putExtra("passedData", resultList1?.get(position))
+                context.startActivity(intent)
 
-        })
+            })
+        }
+
     }
 
     class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -91,10 +107,11 @@ class TopMoviesAdapter(result: ArrayList<ResultList.Results>?, val ctx: Context)
 
     fun addNewData(resultList: ArrayList<ResultList.Results>?) {
         var newData = arrayListOf<ResultList.Results>()
-        resultList?.clear()
+
         newData = resultList!!
         resultList1?.addAll(newData)
-        this.notifyDataSetChanged()
+        Log.d("safsafsafsa", newData?.size.toString())
+        (ctx as ViewMovieActivity).adapter?.notifyDataSetChanged()
     }
     override fun getItemViewType(position: Int): Int {
         return resultList1?.size!! -1

@@ -2,7 +2,7 @@ package com.theavengers.movieapp2.view.activities
 
 import android.app.ProgressDialog
 import android.os.Bundle
-import android.os.Handler
+import android.util.Log
 import android.widget.AbsListView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
@@ -13,7 +13,7 @@ import com.google.android.material.tabs.TabLayout
 import com.theavengers.movieapp2.R
 import com.theavengers.movieapp2.model.ResultList
 import com.theavengers.movieapp2.repository.api.TheMovieDbApiInterface
-import com.theavengers.movieapp2.viewmodel.TopMoviesAdapter
+import com.theavengers.movieapp2.viewmodel.MoviesAdapter
 import com.theavengers.movieapp2.viewmodel.ViewPagerAdapter
 import com.theavengers.movieapp2.viewmodel.getRetrofit
 import io.reactivex.Single
@@ -27,9 +27,11 @@ import retrofit2.Response
 class ViewMovieActivity : AppCompatActivity(),SearchView.OnQueryTextListener{
 
     var resultList: ResultList?= ResultList()
+    var newDataList: ResultList?= ResultList()
+
     var disposable: Disposable?= null
-    var adapter : TopMoviesAdapter?= null
-    val mHandler:Handler = Handler()
+    var adapter : MoviesAdapter?= null
+
     var isScrolling: Boolean = false
     var currentItems:Int = 0
     var totalItems:Int = 0
@@ -37,37 +39,17 @@ class ViewMovieActivity : AppCompatActivity(),SearchView.OnQueryTextListener{
     var text:String = ""
     var pageNumber : Int = 1
     var itemCount : Int = 10
+    var recyclerView: RecyclerView?= null
+    var layoutManager: LinearLayoutManager?= null
     override fun onQueryTextSubmit(query: String?): Boolean {
         return false
     }
 
     override fun onQueryTextChange(newText: String?): Boolean {
         text = newText!!
-//        if(resultList?.resultList?.size!! > 0) {
-//            var searchedList = ResultList().resultList
-//            searchedList = newText?.let {
-//                adapter?.filter(it, resultList!!)
-//            }
-//            if (searchedList != null) {
-//                updateUI(searchedList)
-//            }
-//            else
-//                Toast.makeText(this@ViewMovieActivity,"Content is null",Toast.LENGTH_LONG).show()
-//        }
-//        else{
-//              Toast.makeText(this@ViewMovieActivity,resultList?.resultList.toString(),Toast.LENGTH_LONG).show()
-//            }
-
-        mHandler.removeCallbacksAndMessages(null);
-//        mHandler.postDelayed(object :Runnable{
-//            override fun run() {
-                if (newText != null && newText.length>0) {
-                    searchWithText(newText,false)
-                    if(resultList?.resultList!=null)
-                        updateUI(resultList?.resultList!!)
-                }
-//            }
-//        }, 300)
+        if (newText.length > 0) {
+            searchWithText(newText,false)
+        }
         return true
     }
 
@@ -85,7 +67,28 @@ class ViewMovieActivity : AppCompatActivity(),SearchView.OnQueryTextListener{
                 this,
                 supportFragmentManager
             )
+        recyclerView  = findViewById(R.id.recyclerView)
+        layoutManager = LinearLayoutManager(this)
+        recyclerView?.setLayoutManager(layoutManager)
+        recyclerView?.setHasFixedSize(true)
+        recyclerView?.addOnScrollListener(object : RecyclerView.OnScrollListener(){
 
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                if(newState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL){
+                    isScrolling = true
+                }
+
+            }
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                currentItems = layoutManager?.childCount!!
+                totalItems = layoutManager?.itemCount!!
+                scrollItems = layoutManager?.findFirstVisibleItemPosition()!!
+                if(isScrolling && (currentItems+scrollItems) == totalItems){
+                    isScrolling = false
+                    fetchData()
+                }
+            }
+        })
         viewPager.setAdapter(viewPagerAdapter)
         viewPager.setCurrentItem(0)
         tabLayout.setupWithViewPager(viewPager)
@@ -94,6 +97,7 @@ class ViewMovieActivity : AppCompatActivity(),SearchView.OnQueryTextListener{
 
 
     fun searchWithText(searchKey:String, isPagination:Boolean) {
+
         val theMovieDbApiInterface : TheMovieDbApiInterface? = getRetrofit()
             ?.create(TheMovieDbApiInterface::class.java)
         if(!isPagination) {
@@ -112,10 +116,13 @@ class ViewMovieActivity : AppCompatActivity(),SearchView.OnQueryTextListener{
 
                 override fun onSuccess(t: Response<ResultList>) {
                     resultList = t.body();
-                    adapter = TopMoviesAdapter(
-                        resultList?.resultList,
-                        this@ViewMovieActivity
-                    )
+                    adapter =
+                        MoviesAdapter(
+                           resultList?.resultList!!,this@ViewMovieActivity
+                        )
+                    recyclerView?.adapter = adapter
+//                    adapter?.addNewData(resultList?.resultList)
+
                     progressDialog.dismiss()
                 }
 
@@ -128,8 +135,10 @@ class ViewMovieActivity : AppCompatActivity(),SearchView.OnQueryTextListener{
                 }
 
             })
+
         }
         else{
+
             pageNumber++
             val responseSingleResultList: Single<Response<ResultList>>? =
                 theMovieDbApiInterface?.searchData(searchKey, "bfe85bf7d7aac066e48cfa121ec821cc", pageNumber)
@@ -146,9 +155,10 @@ class ViewMovieActivity : AppCompatActivity(),SearchView.OnQueryTextListener{
 
                 override fun onSuccess(t: Response<ResultList>) {
 
-                    adapter?.addNewData(t.body()?.resultList)
-                    updateUI(resultList?.resultList!!)
-                    adapter?.notifyDataSetChanged()
+                    newDataList = t.body();
+                    resultList?.resultList?.addAll(newDataList?.resultList!!)
+                    Log.d("SizeASDAD",resultList?.resultList?.size.toString())
+                    adapter?.addNewData(newDataList?.resultList)
                     progressDialog.dismiss()
                 }
 
@@ -162,39 +172,6 @@ class ViewMovieActivity : AppCompatActivity(),SearchView.OnQueryTextListener{
 
             })
         }
-    }
-
-    private fun updateUI(resultList: ArrayList<ResultList.Results>) {
-        val recyclerView: RecyclerView? = findViewById(R.id.recyclerView)
-        val layoutManager = LinearLayoutManager(this)
-        recyclerView?.setLayoutManager(layoutManager)
-        recyclerView?.setHasFixedSize(true)
-
-        adapter =
-            TopMoviesAdapter(
-                resultList,
-                this
-            )
-        recyclerView?.adapter = adapter
-        recyclerView?.addOnScrollListener(object : RecyclerView.OnScrollListener(){
-
-            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-                if(newState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL){
-                    isScrolling = true
-                }
-
-            }
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                currentItems = layoutManager.childCount
-                totalItems = layoutManager.itemCount
-                scrollItems = layoutManager.findFirstVisibleItemPosition()
-                if(isScrolling && (currentItems+scrollItems) == totalItems){
-                    isScrolling = false
-                    fetchData()
-                }
-            }
-        })
-
     }
 
     private fun fetchData() {

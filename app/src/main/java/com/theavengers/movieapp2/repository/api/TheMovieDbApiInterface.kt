@@ -9,13 +9,13 @@ import retrofit2.http.Query
 interface TheMovieDbApiInterface {
 
     @GET("discover/movie?sort_by=popularity.desc&api_key=bfe85bf7d7aac066e48cfa121ec821cc")
-    fun getResultList(): Single<Response<ResultList>>
+    fun getResultList(@Query("page") page: Int): Single<Response<ResultList>>
 
     @GET("discover/movie?certification_country=US&certification.lte=G&sort_by=popularity.desc&api_key=bfe85bf7d7aac066e48cfa121ec821cc")
-    fun getPopularKidsMovies(): Single<Response<ResultList>>
+    fun getPopularKidsMovies(@Query("page") page: Int): Single<Response<ResultList>>
 
     @GET("discover/movie?with_genres=18&primary_release_year=2014&api_key=bfe85bf7d7aac066e48cfa121ec821cc")
-    fun getYearTopDramas(): Single<Response<ResultList>>
+    fun getYearTopDramas(@Query("page") page: Int): Single<Response<ResultList>>
 
     @GET("/3/search/movie")
     fun searchData(@Query("query") query: String, @Query("api_key") api_key: String,

@@ -7,29 +7,28 @@ import com.theavengers.movieapp2.R
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import java.util.concurrent.TimeUnit
 
 class SplashScreenActivity : AppCompatActivity() {
 
-    var compositeDisposable:CompositeDisposable = CompositeDisposable()
-
+    var disposable:Disposable? = null
 
     override fun onResume() {
         super.onResume()
-        compositeDisposable.add(Observable.timer(2,TimeUnit.SECONDS).subscribeOn(Schedulers.io())
+        disposable = Observable.timer(2,TimeUnit.SECONDS).subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread()).subscribe {
                 val intent = Intent(applicationContext,
                     LoginActivity::class.java)
                 startActivity(intent)
                 finish()
             }
-        )
     }
 
     override fun onStop() {
         super.onStop()
-        compositeDisposable.dispose()
+        disposable?.dispose()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
