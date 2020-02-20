@@ -110,4 +110,14 @@ class PlayerActivity : AppCompatActivity(),MediaControllerEvents, VideoPlayerEve
         super.onPause()
         lttsPlayerContainer.pause()
     }
+
+    override fun onResume() {
+        super.onResume()
+        lttsPlayerContainer.resume()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        lttsPlayerContainer.releasePlayer()
+    }
 }
