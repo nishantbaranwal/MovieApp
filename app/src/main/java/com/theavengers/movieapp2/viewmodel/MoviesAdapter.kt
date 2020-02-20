@@ -60,7 +60,6 @@ class MoviesAdapter(result: ArrayList<ResultList.Results>?, val ctx: Context) : 
                     context,
                     PlayerActivity::class.java
                 )
-//            val passData:ResultList.Results = resultList1!!.get(position)
                 intent.putExtra("passedData", resultList1?.get(position))
                 context.startActivity(intent)
 

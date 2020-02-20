@@ -80,10 +80,14 @@ class LoginActivity : AppCompatActivity(),View.OnClickListener {
 
     private fun offlineSignIn() {
         if(android.util.Patterns.EMAIL_ADDRESS.matcher(email_et.text.toString()).matches()) {
-            if (et_email.text.toString().equals("nishant@gmail.com") && password_et.text.toString().equals("1234567890")) {
+            if (et_email.text.toString().equals("nishant@gmail.com") && password_et.text.toString().equals("1234567890")
+                        || et_email.text.toString().equals("abc@gmail.com") && password_et.text.toString().equals("1234567890")
+                ) {
                 editor.putBoolean("loginned", true)
                 editor.apply()
                 editor.commit()
+                Toast.makeText(this,"Logged In Successfully",Toast.LENGTH_SHORT).show()
+
                 startActivity(
                     Intent(
                         applicationContext,
@@ -91,9 +95,12 @@ class LoginActivity : AppCompatActivity(),View.OnClickListener {
                     )
                 )
             }
+            else{
+                Toast.makeText(this,"Wrong Email Id Or Password",Toast.LENGTH_LONG).show()
+            }
         }
         else
-            Toast.makeText(this,"Wrong Email Id Or Password",Toast.LENGTH_LONG).show()
+            Toast.makeText(this,"Wrong Email Id",Toast.LENGTH_LONG).show()
 
     }
 

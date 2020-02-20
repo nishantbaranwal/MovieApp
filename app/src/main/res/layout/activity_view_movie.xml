@@ -12,6 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:defaultQueryHint="@string/movie_search"
+        style="@style/SearchViewStyle"
         android:id="@+id/search_view"/>
     <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"
@@ -23,6 +24,9 @@
         android:id="@+id/tabLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        app:tabTextColor="#AD9797"
+        app:tabSelectedTextColor="#ffffff"
+
         android:background="@drawable/gradient"
         app:tabMode="fixed"/>
 
